@@ -1,0 +1,62 @@
+version: '3'
+
+volumes:
+  postgres_data: {}
+  static_data: {}
+  media_data: {}
+
+services:
+  db:
+    image: postgres:13
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_HOST=${DB_HOST}
+      - POSTGRES_PORT=${DB_PORT}
+    restart: always
+
+  web: &web
+    restart: always
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    command: gunicorn Ads_manager.wsgi:application --bind 0.0.0.0:8000
+    security_opt:
+      - seccomp:unconfined
+    volumes:
+      - ./:/app
+      - ./static:/home/app/web/static
+      - ./media:/home/app/web/media
+      - ./locale:/home/app/web/locale
+    env_file:
+      - .env
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+
+
+
+#  redis:
+#    container_name: ${PROJECT_NAME}_redis
+#    image: redis:5.0
+#    restart: always
+#
+#  celery_worker:
+#     <<: *web
+#     container_name: ${PROJECT_NAME}_worker
+#     ports: [ ]
+#     command: celery -A core.celery worker -l INFO
+#     restart: always
+#
+#  celery_beat:
+#     <<: *web
+#     container_name: ${PROJECT_NAME}_beat
+#     ports: [ ]
+#     command: celery -A core.celery beat -l INFO
+#     restart: always
