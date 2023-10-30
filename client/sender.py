@@ -7,12 +7,8 @@ from client import models
 
 
 def send_media_group(message_id):
-
-    data_list = get_media_files_json_data(message_id)
-    print(data_list)
-    for data in data_list:
-        send_message.delay(data)
-        time.sleep(1)
+    send_message(message_id)
+    time.sleep(1)
 
 
 
