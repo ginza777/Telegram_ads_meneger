@@ -15,7 +15,9 @@ class Client_Settings(TimeStamp):
     api_id = models.CharField(max_length=100)
     api_hash = models.CharField(max_length=100)
     phone = models.CharField(max_length=100)
+    token= models.CharField(max_length=100)
     session = models.FileField(upload_to='session', null=True, blank=True)
+
 
     def __str__(self):
         return self.phone
