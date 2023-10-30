@@ -20,7 +20,7 @@ WantedBy=multi-user.target
 
 server {
     listen 80;
-    server_name crm.co.uz;
+    server_name crm.co.uz ads.crm.co.uz;
 
     location = /favicon.ico { access_log off; log_not_found off; }
     location /static/ {
