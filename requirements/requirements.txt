@@ -6,3 +6,4 @@ psycopg2-binary==2.9.9
 requests==2.31.0
 Telethon==1.31.1
 django-environ
+gunicorn
