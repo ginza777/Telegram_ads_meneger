@@ -1,28 +1,19 @@
-import requests
+import time
 
+import requests
+from .tasks import send_message
 from .views import *
 from client import models
 
 
-
 def send_media_group(message_id):
-    channel_id = models.Message.objects.get(message_id=message_id).channel_from
-    token=models.Channel_config.objects.get(from_channel__channel_id=channel_id).bot.bot_token
-    print(message_id)
-    print(token)
-    print(models.Message.objects.get(message_id=message_id).channel_from)
-    url = f'https://api.telegram.org/bot{token}/sendMediaGroup'
-    data, files = get_media_files_json_data(message_id)
-    print(100 * '-')
-    print(data)
-    print(files)
-    r = requests.post(url, data=data, files=files)
-    print(r.status_code)
-    print(r.json())
-    if r.status_code == 200:
-        return True
-    else:
-        return False
+
+    data_list = get_media_files_json_data(message_id)
+    print(data_list)
+    for data in data_list:
+        send_message.delay(data)
+        time.sleep(1)
+
 
 
 def send_msg(message, token, channel_id):

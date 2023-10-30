@@ -7,3 +7,5 @@ requests==2.31.0
 Telethon==1.31.1
 django-environ
 gunicorn
+django-celery-results
+redis
