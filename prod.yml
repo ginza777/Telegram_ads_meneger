@@ -19,6 +19,9 @@ services:
       - POSTGRES_HOST=${DB_HOST}
       - POSTGRES_PORT=${DB_PORT}
     restart: always
+    ports:
+      - 5432:5432
+
 
   web: &web
     restart: always
