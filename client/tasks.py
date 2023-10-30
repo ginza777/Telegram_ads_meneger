@@ -20,8 +20,6 @@ from concurrent.futures import ThreadPoolExecutor
 def send_msg(data: dict):
     url = f"https://api.telegram.org/bot{data['token']}/sendMediaGroup"
     print(100 * '*')
-    print(data['data'])
-    print(data['files'])
     print(data['token'])
 
     # Fayllarni to'g'ri ko'rsatish uchun
