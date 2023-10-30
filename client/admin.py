@@ -1,10 +1,7 @@
 from django.contrib import admin
 from .models import Client_Settings, Bot, Channels, KeywordChannelAds, Channel_config, Filename, Message
 
-@admin.register(Client_Settings)
-class ClientSettingsAdmin(admin.ModelAdmin):
-    list_display = ('id', 'phone', 'api_id', 'api_hash', 'created_at', 'updated_at')
-
+admin.site.register(Client_Settings)
 @admin.register(Bot)
 class BotAdmin(admin.ModelAdmin):
     list_display = ('id', 'bot_name', 'bot_token', 'bot_link', 'created_at', 'updated_at')
