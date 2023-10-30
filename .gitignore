@@ -2,3 +2,5 @@
 media/*
 +998993485501.session-journal
 .env
+/.env
+env
