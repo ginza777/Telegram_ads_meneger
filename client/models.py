@@ -34,7 +34,7 @@ class Client_Settings(TimeStamp):
 
 class Bot(TimeStamp):
     bot_name = models.CharField(max_length=100)
-    bot_token = models.CharField(max_length=100)
+    bot_token = models.CharField(max_length=100,unique=True)
     bot_link = models.CharField(max_length=100)
 
     def __str__(self):
@@ -42,6 +42,7 @@ class Bot(TimeStamp):
 
     class Meta:
         db_table = 'bot'
+
 
 
 class Channels(TimeStamp):
@@ -149,6 +150,3 @@ class Message(TimeStamp):
     class Meta:
         db_table = 'message'
 
-# admin.py faylini tarkibini o'zgartirmasangiz, ushbu kod to'g'ri ishlaydi.
-
-# Chunki kod ko'rib bo'lmagan muammolar xato emas, ularni to'g'rilab chiqib borish uchun Python va Django o'zgaruvchanlarining uslubiy qo'llanishini ko'rsating.

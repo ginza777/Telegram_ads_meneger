@@ -62,7 +62,7 @@ async def process_grouped_media_with_caption(event, client):
     group_id = event.message.grouped_id
     channel_id = event.message.peer_id.channel_id
     caption = event.message.raw_text
-    caption_file = f'media/{group_id}/{group_id}.txt'
+    caption_file = f'media/{group_id}/{group_id}-{random_string(7)}.txt'
     photo_file = f'media/{group_id}/{group_id}-{random_string(7)}.jpeg'
 
     await client.download_media(photo, file=photo_file)
@@ -87,7 +87,7 @@ async def process_single_media_with_caption(event, client):
     channel_id = event.message.peer_id.channel_id
     caption = event.message.raw_text
     file_path = f'media/{message_id}/{message_id}-{random_string(7)}.jpeg'
-    caption_file = f'media/{message_id}/{message_id}.txt'
+    caption_file = f'media/{message_id}/{message_id}-{random_string(7)}.txt'
     await client.download_media(photo, file=file_path)
     await write_caption_to_file(caption_file, caption)
     await crate_message(message_id=message_id, channel_id=channel_id, single_photo=True, caption=caption_file,
