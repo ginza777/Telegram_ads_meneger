@@ -1,3 +1,5 @@
+import datetime
+
 from client.views import get_media_files_json_data
 import requests
 import time
@@ -14,13 +16,14 @@ def send_msg(data: dict):
              enumerate(data['files'].items())}
 
     r = requests.post(url, data=data['data'], files=files)
+    current_time = datetime.datetime.fromtimestamp(time.time())
     if r.status_code == 200:
         print(
-            f"200 - {data['channel_from']} dan  {data['data']['chat_id']} ga  {data['message_id']} xabar yuborildi  yuborildi time: {time.time()}"
+            f"200 - {data['channel_from']} dan  {data['data']['chat_id']} ga  {data['message_id']} xabar yuborildi  yuborildi time: {current_time}"
         )
     if r.status_code == 400:
         print(
-            f"400 - {data['channel_from']} dan  {data['data']['chat_id']} ga  {data['message_id']} xabar yuborilmadi   error: {r.json()} time: {time.time()}")
+            f"400 - {data['channel_from']} dan  {data['data']['chat_id']} ga  {data['message_id']} xabar yuborilmadi   error: {r.json()} time: {current_time}")
     time.sleep(5)
 
 
