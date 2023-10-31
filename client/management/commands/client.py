@@ -4,7 +4,7 @@ from concurrent.futures import ThreadPoolExecutor
 from asgiref.sync import sync_to_async
 from django.core.management.base import BaseCommand
 from telethon import TelegramClient, events
-from telethon.tl.types import Message
+from telethon.tl.types import Message, MessageMediaPhoto
 from asyncio import Queue, create_task
 from client.views import random_string
 from client.models import Client_Settings, Channels, Filename
@@ -27,8 +27,8 @@ async def process_queue(client):
     while not message_queue.empty():
         is_processing = True
         event = await message_queue.get()
-        if isinstance(event.message, Message) and hasattr(event.message, 'media') and event.message.media:
-            if event.media.photo:
+        if isinstance(event.message, Message) and hasattr(event.message, 'media'):
+            if isinstance(event.message.media, MessageMediaPhoto):
                 if event.message.grouped_id is not None:
                     if event.message.grouped_id and event.message is not None and event.message.raw_text != '':
                         await process_grouped_media_with_caption(event, client)
@@ -37,14 +37,11 @@ async def process_queue(client):
                         await process_grouped_media_without_caption(event, client)
 
                 if event.message.grouped_id is None:
-                    print("grouped_id yo'q")
                     if event.message.grouped_id is None and event.message is not None and event.message.raw_text != '':
-                        print("rasm va caption bor")
                         await process_single_media_with_caption(event, client)
-
-            print(100 * '*')
-            message_queue.task_done()
+                message_queue.task_done()
         is_processing = False
+
 
 
 async def main():
@@ -61,14 +58,10 @@ async def main():
 
 
 async def process_grouped_media_with_caption(event, client):
-    print('grouped_id bor caption bor')
     photo = event.media.photo
     group_id = event.message.grouped_id
     channel_id = event.message.peer_id.channel_id
-    print(channel_id)
-    print('\n\n\n')
     caption = event.message.raw_text
-    print(caption)
     caption_file = f'media/{group_id}/{group_id}.txt'
     photo_file = f'media/{group_id}/{group_id}-{random_string(7)}.jpeg'
 
@@ -79,12 +72,9 @@ async def process_grouped_media_with_caption(event, client):
 
 
 async def process_grouped_media_without_caption(event, client):
-    print('grouped_id bor caption yoq')
     photo = event.media.photo
     group_id = event.message.grouped_id
     channel_id = event.message.peer_id.channel_id
-    print(channel_id)
-    print('\n\n\n')
     file_path = f'media/{group_id}/{group_id}-{random_string(7)}.jpeg'
     await client.download_media(photo, file=file_path)
     await crate_message(message_id=group_id, channel_id=channel_id, single_photo=False, caption=None,
@@ -96,11 +86,6 @@ async def process_single_media_with_caption(event, client):
     message_id = event.message.id
     channel_id = event.message.peer_id.channel_id
     caption = event.message.raw_text
-    print(caption)
-    print('\n\n\n')
-    print(message_id)
-    print(channel_id)
-    print('\n\n\n')
     file_path = f'media/{message_id}/{message_id}-{random_string(7)}.jpeg'
     caption_file = f'media/{message_id}/{message_id}.txt'
     await client.download_media(photo, file=file_path)
@@ -112,18 +97,16 @@ async def process_single_media_with_caption(event, client):
 @sync_to_async
 def crate_message(message_id, channel_id, single_photo=False, photo_file=None, caption=None):
     message, created = MessageModel.objects.get_or_create(message_id=message_id)
-    print(f"-100{channel_id}", '\n\n\n')
     if channel_id is not None:
         channel = Channels.objects.get(channel_id=f"-100{channel_id}", my_channel=False)
-        print('get', channel)
         message.channel_from = channel.channel_id
     if photo_file is not None:
-        file = Filename.objects.create(filename=photo_file,message_id=message_id, is_photo=True)
+        file = Filename.objects.create(filename=photo_file, message_id=message_id, is_photo=True)
         file.save()
         message.photo = True
         message.photo_count = message.photo_count + 1
     if caption is not None:
-        file = Filename.objects.create(filename=caption,message_id=message_id, is_caption=True)
+        file = Filename.objects.create(filename=caption, message_id=message_id, is_caption=True)
         message.caption = True
         file.save()
 
@@ -131,7 +114,6 @@ def crate_message(message_id, channel_id, single_photo=False, photo_file=None, c
         message.single_photo = True
         message.photo_count = 1
         message.photo = True
-
 
     message.save()
 
@@ -142,7 +124,7 @@ def crate_message(message_id, channel_id, single_photo=False, photo_file=None, c
         old_message.save()
 
     except MessageModel.DoesNotExist:
-        print('Message topilmadi')
+        pass
 
 
 async def write_caption_to_file(file_path, caption_text):
