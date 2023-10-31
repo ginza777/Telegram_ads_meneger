@@ -15,7 +15,7 @@ def random_string(length):
 
 def filter_caption(message_id: str):
     if models.Message.objects.get(message_id=message_id).caption:
-        caption = models.Filename.objects.get(message_id=message_id, is_caption=True).filename
+        caption = models.Filename.objects.filter(message_id=message_id, is_caption=True).last().filename
         channel= models.Channels.objects.get(channel_id=models.Message.objects.get(message_id=message_id).channel_from,my_channel=False)
         my_channel=models.Channel_config.objects.filter(from_channel=channel).last().to_channel
 
