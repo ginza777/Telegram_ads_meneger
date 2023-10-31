@@ -14,13 +14,13 @@ def send_msg(data: dict):
              enumerate(data['files'].items())}
 
     r = requests.post(url, data=data['data'], files=files)
-    print(r.status_code)
     if r.status_code == 200:
         print(
-            f"{data['channel_from']} dan  {data['data']['chat_id']} ga  {data['message_id']} xabar yuborildi  yuborildi")
+            f"200 - {data['channel_from']} dan  {data['data']['chat_id']} ga  {data['message_id']} xabar yuborildi  yuborildi time: {time.time()}"
+        )
     if r.status_code == 400:
         print(
-            f"{data['channel_from']} dan  {data['data']['chat_id']} ga  {data['message_id']} xabar yuborilmadi   error: {r.json()}")
+            f"400 - {data['channel_from']} dan  {data['data']['chat_id']} ga  {data['message_id']} xabar yuborilmadi   error: {r.json()} time: {time.time()}")
     time.sleep(3)
 
 
