@@ -58,8 +58,11 @@ class Channels(TimeStamp):
         unique_together = ('channel_id', 'my_channel')
 
     def save(self, *args, **kwargs):
-        if not self.channel_id.startswith('-100'):
-            self.channel_id = '-100' + self.channel_id
+        if not self.channel_id.startswith('-'):
+            if self.channel_id.startswith('100'):
+                self.channel_id = '-' + self.channel_id
+            else:
+                self.channel_id = '-100' + self.channel_id
         super().save(*args, **kwargs)
 
     def clean(self):
