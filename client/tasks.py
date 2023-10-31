@@ -21,7 +21,7 @@ def send_msg(data: dict):
     if r.status_code == 400:
         print(
             f"400 - {data['channel_from']} dan  {data['data']['chat_id']} ga  {data['message_id']} xabar yuborilmadi   error: {r.json()} time: {time.time()}")
-    time.sleep(3)
+    time.sleep(5)
 
 
 def send_message(message_id):
