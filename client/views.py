@@ -25,6 +25,7 @@ def filter_caption(message_id: str):
 
         with open(caption, 'r') as f:
             caption = f.read()
+            caption = '\n'.join(line for line in caption.splitlines() if line.strip())
             for key_word in keyword_text_list:
                 caption = caption.replace(key_word, '')
             caption = caption + '\n' + my_channel_text
