@@ -3,6 +3,7 @@ from django.db import models
 
 from client.sender import send_media_group
 
+
 class TimeStamp(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -11,13 +12,13 @@ class TimeStamp(models.Model):
         abstract = True
         db_table = 'timestamp'
 
+
 class Client_Settings(TimeStamp):
     api_id = models.CharField(max_length=100)
     api_hash = models.CharField(max_length=100)
     phone = models.CharField(max_length=100)
-    token= models.CharField(max_length=100)
+    token = models.CharField(max_length=100)
     session = models.FileField(upload_to='session', null=True, blank=True)
-
 
     def __str__(self):
         return self.phone
@@ -30,6 +31,7 @@ class Client_Settings(TimeStamp):
             self.session.name = str(self.phone) + '.session'
         super().save(*args, **kwargs)
 
+
 class Bot(TimeStamp):
     bot_name = models.CharField(max_length=100)
     bot_token = models.CharField(max_length=100)
@@ -40,6 +42,7 @@ class Bot(TimeStamp):
 
     class Meta:
         db_table = 'bot'
+
 
 class Channels(TimeStamp):
     channel_name = models.CharField(max_length=250)
@@ -63,6 +66,7 @@ class Channels(TimeStamp):
         if Channels.objects.filter(channel_id=self.channel_id).exclude(id=self.id).exists():
             raise ValidationError('This channel_id already exists')
 
+
 class KeywordChannelAds(TimeStamp):
     text = models.TextField()
     channel = models.ForeignKey(Channels, on_delete=models.SET_NULL, null=True, blank=True)
@@ -74,13 +78,16 @@ class KeywordChannelAds(TimeStamp):
         db_table = 'keywordchannelads'
 
     def clean(self):
-        if self.channel.my_channel and KeywordChannelAds.objects.filter(channel=self.channel).exclude(id=self.id).exists():
+        if self.channel.my_channel and KeywordChannelAds.objects.filter(channel=self.channel).exclude(
+                id=self.id).exists():
             raise ValidationError('This channel already has keyword')
+
 
 class Channel_config(TimeStamp):
     title = models.CharField(max_length=100)
-    from_channel = models.ForeignKey(Channels, on_delete=models.SET_NULL, null=True, blank=True, related_name='from_channel_configs')
-    to_channel = models.ForeignKey(Channels, on_delete=models.SET_NULL, null=True, related_name='to_channel_configs')
+    from_channel = models.ForeignKey(Channels, on_delete=models.SET_NULL, null=True, blank=True,
+                                     related_name='from_channel_configs', limit_choices_to={'my_channel': False})
+    to_channel = models.ForeignKey(Channels, on_delete=models.SET_NULL, null=True, related_name='to_channel_configs',limit_choices_to={'my_channel': True})
     bot = models.ForeignKey(Bot, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
@@ -96,6 +103,7 @@ class Channel_config(TimeStamp):
         if not self.to_channel.my_channel:
             raise ValidationError('This channel is not my channel')
 
+
 class Filename(TimeStamp):
     message_id = models.CharField(max_length=50)
     filename = models.CharField(max_length=100)
@@ -107,6 +115,7 @@ class Filename(TimeStamp):
 
     class Meta:
         db_table = 'filename'
+
 
 class Message(TimeStamp):
     message_id = models.CharField(max_length=500, unique=True)

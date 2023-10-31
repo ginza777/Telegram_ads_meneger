@@ -1,9 +1,6 @@
 import time
-
 import requests
 from .tasks import send_message
-from .views import *
-from client import models
 
 
 def send_media_group(message_id):

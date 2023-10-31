@@ -20,9 +20,7 @@ def filter_caption(message_id: str):
         my_channel=models.Channel_config.objects.filter(from_channel=channel).last().to_channel
 
         keyword_texts = models.KeywordChannelAds.objects.filter(channel=channel)
-        # print('keyword text',keyword_texts)# Barcha bog'liq "KeywordChannelAds" obyektlarni olish
         keyword_text_list = [keyword.text for keyword in keyword_texts]
-        # print(keyword_text_list)
         my_channel_text=models.KeywordChannelAds.objects.get(channel=my_channel).text
 
         with open(caption, 'r') as f:
@@ -36,13 +34,8 @@ def filter_caption(message_id: str):
 
 
 def get_photo_filenames_by_message_id(message_id):
-    # `message_id` orqali `Message` obyektini qidirish
-
     messages = models.Filename.objects.filter(message_id=str(message_id), is_photo=True)
-    # print(messages)
-    # Agar `Message` topilsa, `photo_file` ning `filename` atributini olish
     photo_filenames = [message.filename for message in messages]
-    # print(photo_filenames)
     return photo_filenames
 
 
@@ -72,14 +65,15 @@ def get_media_files_json_data(message_id):
     channel_id_list = [channel.to_channel.channel_id for channel in channel_id]
     ##
     data_list = []
-    TOKENS = []
     for ch_id in channel_id_list:
         data_list.append(
             {
                 'data': {'chat_id': ch_id, 'media': json.dumps(media)},
                 'files': files,
                 'token': models.Channel_config.objects.get(to_channel__channel_id=ch_id,
-                                                           from_channel__channel_id=channel).bot.bot_token
+                                                           from_channel__channel_id=channel).bot.bot_token,
+                'channel_from': channel,
+                'message_id': message_id
             }
         )
 
