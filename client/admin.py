@@ -35,7 +35,7 @@ class FilenameAdmin(admin.ModelAdmin):
 
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):
-    list_display = ('id', 'message_id', 'caption', 'photo', 'channel_from_name','channel_to', 'delete_status', 'single_photo', 'send_status', 'photo_count', 'end', 'created_at', 'updated_at')
+    list_display = ( 'message_id', 'caption', 'photo', 'channel_from_name','channel_to', 'delete_status', 'single_photo', 'send_status', 'photo_count', 'end', 'updated_at')
 
     def channel_from_name(self,obj):
         return Channel_config.objects.get(from_channel__channel_id=str(obj.channel_from)).from_channel.channel_name
