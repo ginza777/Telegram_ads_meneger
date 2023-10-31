@@ -48,7 +48,7 @@ class Bot(TimeStamp):
 class Channels(TimeStamp):
     channel_name = models.CharField(max_length=250)
     channel_link = models.CharField(max_length=250)
-    channel_id = models.CharField(max_length=100)
+    channel_id = models.CharField(max_length=100,unique=True)
     my_channel = models.BooleanField(default=False)
 
     def __str__(self):
