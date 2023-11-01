@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from log_info.models import SomeErrors
-from setting_ads.models import Channel_config
+from setting_ads.models import Channel_config, Channels
 from .models import Filename, Message
 
 
@@ -14,25 +14,24 @@ class FilenameAdmin(admin.ModelAdmin):
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):
     list_display = (
-    'message_id', 'caption', 'photo', 'channel_from_name', 'channel_to', 'delete_status', 'single_photo', 'send_status',
+    'message_id', 'caption', 'photo', 'channel_from_name', 'channel_to_count', 'delete_status', 'single_photo', 'send_status',
     'photo_count', 'end', 'updated_at')
 
     def channel_from_name(self, obj):
         try:
-            channel_name = Channel_config.objects.get(
-                from_channel__channel_id=str(obj.channel_from)).from_channel.channel_name
+            channel_name = Channels.objects.get(channel_id=str(obj.channel_from)).channel_name
         except:
             channel_name = None
             SomeErrors.objects.create(title=f"Admin panelda channel_from_name error",
                                       error=f"channel_name={channel_name}\n message={obj.message_id} \n id={obj.id}")
         return channel_name
 
-    def channel_to(self, obj):
+    def channel_to_count(self, obj):
         try:
-            channel_name = Channel_config.objects.get(
-                to_channel__channel_id=str(obj.channel_from)).to_channel.channel_name
+            channel_count = Channel_config.objects.filter(
+                to_channel__channel_id=str(obj.channel_from)).count()
         except:
-            channel_name = None
+            channel_count = None
             SomeErrors.objects.create(title=f"Admin panelda channel_to error",
-                                      error=f"channel_name={channel_name}\nmmessage={obj.message_id}\nid={obj.id}")
-        return channel_name
+                                      error=f"channel_name={channel_count}\nmmessage={obj.message_id}\nid={obj.id}")
+        return channel_count
