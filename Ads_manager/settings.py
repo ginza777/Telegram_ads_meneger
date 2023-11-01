@@ -14,6 +14,7 @@ from pathlib import Path
 import os
 
 import environ
+from celery.schedules import crontab
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -43,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'client.apps.ClientConfig',
     'django_celery_results',
+    'django_celery_beat',
     'log_info',
     'sender',
     'setting_ads',
@@ -151,8 +153,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
 CELERY_BEAT_SCHEDULE = {
-    'daily-user-gift-check': {
-        'task': 'accounts.tasks.daily_user_gift_check',
+    'send_message_task': {
+        'task': 'sender.celery_tasks.send_message_task',
+        #one of year
+        'schedule': crontab(minute=0, hour=0, day_of_month=1, month_of_year='*/1'),
     },
 
 }

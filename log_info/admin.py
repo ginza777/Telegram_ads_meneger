@@ -3,7 +3,7 @@ from .models import Message_log, Listening_channels, Note, SomeErrors
 
 @admin.register(Message_log)
 class MessageLogAdmin(admin.ModelAdmin):
-    list_display = ['message', 'created_at', 'updated_at']
+    list_display = ['message','is_sent', 'created_at', 'updated_at']
     list_filter = ['created_at']
     search_fields = ['message__text']  # Assuming 'text' is a field in the Message model
 

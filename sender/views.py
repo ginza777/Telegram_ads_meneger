@@ -85,16 +85,17 @@ def get_media_files_json_data(message_id):
         caption = filter_caption(message_id,ch_id)
         media[0]['caption'] = caption
         media[0]['parse_mode'] = 'HTML'
-        data_list.append(
-            {
-                'data': {'chat_id': ch_id, 'media': json.dumps(media)},
-                'files': files,
-                'token': setting_models.Channel_config.objects.get(to_channel__channel_id=ch_id,
-                                                           from_channel=from_channel).bot.bot_token,
-                'channel_from': from_channel.channel_id,
-                'message_id': message_id
-            }
-        )
+        if caption is not None:
+            data_list.append(
+                {
+                    'data': {'chat_id': ch_id, 'media': json.dumps(media)},
+                    'files': files,
+                    'token': setting_models.Channel_config.objects.get(to_channel__channel_id=ch_id,
+                                                               from_channel=from_channel).bot.bot_token,
+                    'channel_from': from_channel.channel_id,
+                    'message_id': message_id
+                }
+            )
 
     return data_list
 

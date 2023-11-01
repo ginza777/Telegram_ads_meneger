@@ -22,10 +22,12 @@ def listening_channels_view(channel_list: list):
             SomeErrors.objects.create(title='listening_channels', error=f"{channel} not found")
 
 
-def message_log_view(message, log):
+def message_log_view(message, log,is_sent=None):
     try:
         message = Message_log.objects.get(message=message)
         message.log = message.log + '\n' + 100 * '-' + f"\n{log}"
+        if is_sent:
+            message.is_sent=is_sent
         message.save()
     except:
         Message_log.objects.create(message=message, log=log)

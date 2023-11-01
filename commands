@@ -1,0 +1,3 @@
+python manage.py client
+celery -A  Ads_manager beat --loglevel=info  --scheduler django_celery_beat.schedulers:DatabaseScheduler
+celery -A  Ads_manager worker --loglevel=info

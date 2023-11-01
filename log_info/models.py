@@ -15,6 +15,7 @@ class TimeStamp(models.Model):
 class Message_log(TimeStamp):
     message=models.ForeignKey(Message,on_delete=models.CASCADE,related_name='message_log',null=True,blank=True)
     log=models.TextField()
+    is_sent=models.BooleanField(default=False)
     class Meta:
         db_table = 'message_log'
         verbose_name_plural = 'Message_log'
