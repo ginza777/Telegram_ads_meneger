@@ -35,7 +35,6 @@ class Message(TimeStamp):
     single_photo = models.BooleanField(default=False)
     send_status = models.BooleanField(default=False)
     photo_count = models.IntegerField(default=0)
-    ready = models.BooleanField(default=False)
     end = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
@@ -48,3 +47,17 @@ class Message(TimeStamp):
 
     class Meta:
         db_table = 'message'
+
+
+class Message_sent_status(TimeStamp):
+    message=models.ForeignKey(Message,on_delete=models.CASCADE,related_name='message_sent_status',null=True,blank=True)
+    from_channel=models.ForeignKey(Channels,on_delete=models.CASCADE,related_name='from_channel',null=True,blank=True,limit_choices_to={'my_channel':False})
+    to_channel=models.ForeignKey(Channels,on_delete=models.CASCADE,related_name='to_channel',null=True,blank=True,limit_choices_to={'my_channel':True})
+    sent_status=models.BooleanField(default=False)
+
+    class Meta:
+        db_table = 'message_sent_status'
+        verbose_name_plural = 'message_sent_status'
+
+    def __str__(self):
+        return self.message.message_id

@@ -77,8 +77,8 @@ def get_media_files_json_data(message_id):
 
     from_channel = models.Message.objects.get(message_id=message_id).channel_from
     ##
-    channel_id = setting_models.Channel_config.objects.filter(from_channel=from_channel)
-    channel_id_list = [channel.to_channel.channel_id for channel in channel_id]
+    channel_configs = setting_models.Channel_config.objects.filter(from_channel=from_channel)
+    channel_id_list = [channel_config.to_channel.channel_id for channel_config in channel_configs]
     ##
     data_list = []
     for ch_id in channel_id_list:
