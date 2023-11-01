@@ -1,12 +1,4 @@
-import time
 import requests
-from .tasks import send_message
-
-
-def send_media_group(message_id):
-    send_message(message_id)
-    time.sleep(1)
-
 
 
 def send_msg(message, token, channel_id):

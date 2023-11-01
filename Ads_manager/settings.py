@@ -43,6 +43,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'client.apps.ClientConfig',
     'django_celery_results',
+    'log_info',
+    'sender',
+    'setting_ads',
+
 ]
 
 MIDDLEWARE = [
@@ -101,15 +105,6 @@ CACHES = {
 
 AUDITLOG_INCLUDE_ALL_MODELS = True
 
-# CELERY CONFIGURATION
-CELERY_BROKER_URL = env.str("CELERY_BROKER_URL", "redis://localhost:6379")
-CELERY_RESULT_BACKEND = env.str("CELERY_BROKER_URL", "redis://localhost:6379")
-
-CELERY_TIMEZONE = "Asia/Tashkent"
-
-CELERY_TASK_TRACK_STARTED = True
-CELERY_TASK_TIME_LIMIT = 30 * 60
-
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
@@ -153,12 +148,20 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
-
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
+CELERY_BEAT_SCHEDULE = {
+    'daily-user-gift-check': {
+        'task': 'accounts.tasks.daily_user_gift_check',
+    },
+
+}
+
 BROKER_URL = "redis://localhost:6379"
+CELERY_RESULT_BACKEND = "redis://localhost:6379"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
 CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
-
+CELERY_TIMEZONE = "Asia/Tashkent"

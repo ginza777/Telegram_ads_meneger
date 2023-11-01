@@ -1,43 +1,38 @@
 from django.contrib import admin
-from .models import Client_Settings, Bot, Channels, KeywordChannelAds, Channel_config, Filename, Message
 
-admin.site.register(Client_Settings)
-@admin.register(Bot)
-class BotAdmin(admin.ModelAdmin):
-    list_display = ('id', 'bot_name', 'bot_token', 'bot_link', 'created_at', 'updated_at')
+from log_info.models import SomeErrors
+from setting_ads.models import Channel_config
+from .models import Filename, Message
 
-
-#inline for channels vs KeywordChannelAds
-
-class KeywordChannelAdsInline(admin.TabularInline):
-    model = KeywordChannelAds
-    extra = 2
-
-
-@admin.register(Channels)
-class ChannelsAdmin(admin.ModelAdmin):
-    list_display = ('id', 'channel_name', 'channel_link', 'channel_id', 'my_channel', 'created_at', 'updated_at')
-    inlines = [KeywordChannelAdsInline]
-@admin.register(KeywordChannelAds)
-class KeywordChannelAdsAdmin(admin.ModelAdmin):
-    list_display = ('id', 'text', 'channel', 'created_at', 'updated_at')
-
-
-
-@admin.register(Channel_config)
-class ChannelConfigAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'from_channel', 'to_channel', 'bot', 'created_at', 'updated_at')
 
 @admin.register(Filename)
 class FilenameAdmin(admin.ModelAdmin):
     list_display = ('id', 'message_id', 'filename', 'is_caption', 'is_photo', 'created_at', 'updated_at')
     search_fields = ('message_id', 'filename')
 
+
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):
-    list_display = ( 'message_id', 'caption', 'photo', 'channel_from_name','channel_to', 'delete_status', 'single_photo', 'send_status', 'photo_count', 'end', 'updated_at')
+    list_display = (
+    'message_id', 'caption', 'photo', 'channel_from_name', 'channel_to', 'delete_status', 'single_photo', 'send_status',
+    'photo_count', 'end', 'updated_at')
 
-    def channel_from_name(self,obj):
-        return Channel_config.objects.get(from_channel__channel_id=str(obj.channel_from)).from_channel.channel_name
-    def channel_to(self,obj):
-        return Channel_config.objects.get(from_channel__channel_id=str(obj.channel_from)).to_channel.channel_name
+    def channel_from_name(self, obj):
+        try:
+            channel_name = Channel_config.objects.get(
+                from_channel__channel_id=str(obj.channel_from)).from_channel.channel_name
+        except:
+            channel_name = None
+            SomeErrors.objects.create(title=f"Admin panelda channel_from_name error",
+                                      error=f"channel_name={channel_name}\n message={obj.message_id} \n id={obj.id}")
+        return channel_name
+
+    def channel_to(self, obj):
+        try:
+            channel_name = Channel_config.objects.get(
+                to_channel__channel_id=str(obj.channel_from)).to_channel.channel_name
+        except:
+            channel_name = None
+            SomeErrors.objects.create(title=f"Admin panelda channel_to error",
+                                      error=f"channel_name={channel_name}\nmmessage={obj.message_id}\nid={obj.id}")
+        return channel_name
