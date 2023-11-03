@@ -1,6 +1,9 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 
+from sender.sender import send_msg
+
+
 class TimeStamp(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -10,10 +13,10 @@ class TimeStamp(models.Model):
         db_table = 'timestamp'
 
 class Client_Settings(TimeStamp):
-    api_id = models.CharField(max_length=100)
-    api_hash = models.CharField(max_length=100)
-    phone = models.CharField(max_length=100)
-    token = models.CharField(max_length=100)
+    api_id = models.CharField(max_length=100,default='29441076')
+    api_hash = models.CharField(max_length=100,default='2c170fe7bc8b8c8f8a1e1ad72db9710e')
+    phone = models.CharField(max_length=100,default='+998993485501')
+    token = models.CharField(max_length=100,null=True,blank=True)
     session = models.FileField(upload_to='session', null=True, blank=True)
 
     def __str__(self):
@@ -39,12 +42,20 @@ class Bot(TimeStamp):
     class Meta:
         db_table = 'bot_settings'
 
+class Channel_type(models.Model):
+    type=models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.type
+
 
 class Channels(TimeStamp):
     channel_name = models.CharField(max_length=250)
     channel_link = models.CharField(max_length=250)
     channel_id = models.CharField(max_length=100, unique=True)
     my_channel = models.BooleanField(default=False)
+    bot = models.ForeignKey(Bot, on_delete=models.PROTECT, null=True, blank=True)
+    type=models.ForeignKey(Channel_type,on_delete=models.PROTECT)
 
     def __str__(self):
         return self.channel_name
@@ -59,6 +70,20 @@ class Channels(TimeStamp):
                 self.channel_id = '-' + self.channel_id
             else:
                 self.channel_id = '-100' + self.channel_id
+        if self.my_channel and self.bot is None:
+            raise ValidationError('This channel is my channel, please select bot')
+        if not self.my_channel:
+            self.bot = None
+        if self.my_channel and self.bot is not None:
+            res=send_msg('Hello', self.bot.bot_token, self.channel_id)
+            if not res:
+                raise ValidationError('This bot did not send message to this channel')
+        if self.type is None:
+            raise ValidationError('Please select channel type')
+
+
+
+
         super().save(*args, **kwargs)
 
     def clean(self):
@@ -83,23 +108,3 @@ class KeywordChannelAds(TimeStamp):
             raise ValidationError('This channel already has keyword')
 
 
-class Channel_config(TimeStamp):
-    title = models.CharField(max_length=100)
-    from_channel = models.ForeignKey(Channels, on_delete=models.SET_NULL, null=True, blank=True,
-                                     related_name='from_channel_configs', limit_choices_to={'my_channel': False},unique=True)
-    to_channel = models.ForeignKey(Channels, on_delete=models.SET_NULL, null=True, related_name='to_channel_configs',
-                                   limit_choices_to={'my_channel': True})
-    bot = models.ForeignKey(Bot, on_delete=models.SET_NULL, null=True, blank=True)
-
-    def __str__(self):
-        return self.title
-
-    class Meta:
-        db_table = 'channel_config'
-        unique_together = ('from_channel', 'to_channel')
-
-    def clean(self):
-        if self.from_channel.my_channel:
-            raise ValidationError('This channel is my channel')
-        if not self.to_channel.my_channel:
-            raise ValidationError('This channel is not my channel')

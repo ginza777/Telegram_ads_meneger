@@ -1,16 +1,10 @@
 from django.db import models
-from setting_ads.models import Channels,Client_Settings
+from setting_ads.models import Channels, Client_Settings, TimeStamp
 from client.models import Message
 # Create your models here.
 
 
-class TimeStamp(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
-        abstract=True
-        db_table = 'timestamp'
 
 class Message_log(TimeStamp):
     message=models.ForeignKey(Message,on_delete=models.CASCADE,related_name='message_log',null=True,blank=True)
@@ -22,17 +16,17 @@ class Message_log(TimeStamp):
 
 
 class Listening_channels(TimeStamp):
-    channel_id = models.CharField(max_length=255, unique=True)
     listening_channel = models.ForeignKey(Channels, on_delete=models.SET_NULL, related_name='listening_channels',
-                                          null=True, blank=True)
+                                          null=True, blank=True,unique=True)
+
 
     class Meta:
         db_table = 'listening_channels'
         verbose_name_plural = 'listening_channels'
-        unique_together = ('channel_id', 'listening_channel')
+
 
     def __str__(self):
-        return f"{self.channel_id}"
+        return f"{self.listening_channel}"
 
 class Note(TimeStamp):
     title=models.CharField(max_length=255)

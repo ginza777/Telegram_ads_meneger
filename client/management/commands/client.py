@@ -19,9 +19,10 @@ is_processing = False
 
 # Bot va Client sozlamalari
 env = Client_Settings.objects.last()
-channels = list(Channels.objects.filter(my_channel=False).values_list('channel_link', flat=True))
+channels =list( Channels.objects.filter(my_channel=False).values_list('channel_link', flat=True))
+print(channels)
 # ===========[log start]================
-listening_channels_view(channels)
+listening_channels_view(list(channels))
 # ===========[log end]================
 
 # ThreadPoolExecutor obyektini yaratish
@@ -34,6 +35,7 @@ async def process_queue(client):
         is_processing = True
         event = await message_queue.get()
         if isinstance(event.message, Message) and hasattr(event.message, 'media'):
+            print("new message")
             # Rasmlar  va Captionlar uchun
             if isinstance(event.message.media, MessageMediaPhoto):
                 if event.message.grouped_id is not None:

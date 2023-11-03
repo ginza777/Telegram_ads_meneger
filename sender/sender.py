@@ -9,10 +9,10 @@ def send_msg(message, token, channel_id):
         'parse_mode': 'HTML'
     }
     r = requests.post(url, data=params)
-    if r.status_code != 200:
-        return False, r.status_code
+    if r.status_code == 200:
+        return True
     else:
-        return True, r.status_code
+        return False
 
 
 def send_as_photo(image_caption, image, token, channel_id):

@@ -1,8 +1,8 @@
 from django.contrib import admin
 
 from log_info.models import SomeErrors
-from setting_ads.models import Channel_config, Channels
-from .models import Filename, Message
+from setting_ads.models import Channels
+from .models import Filename, Message,Message_history
 
 
 @admin.register(Filename)
@@ -19,7 +19,7 @@ class MessageAdmin(admin.ModelAdmin):
 
     def channel_from_name(self, obj):
         try:
-            channel_name = Channels.objects.get(channel_id=str(obj.channel_from)).channel_name
+            channel_name = obj.channel_from.channel_name
         except:
             channel_name = None
             SomeErrors.objects.create(title=f"Admin panelda channel_from_name error",
@@ -28,10 +28,17 @@ class MessageAdmin(admin.ModelAdmin):
 
     def channel_to_count(self, obj):
         try:
-            channel_count = Channel_config.objects.filter(
-                to_channel__channel_id=str(obj.channel_from)).count()
+            channel_to_count = Channels.objects.filter(type=obj.channel_from.type, my_channel=True).count()
         except:
-            channel_count = None
-            SomeErrors.objects.create(title=f"Admin panelda channel_to error",
-                                      error=f"channel_name={channel_count}\nmmessage={obj.message_id}\nid={obj.id}")
-        return channel_count
+            channel_to_count = None
+            SomeErrors.objects.create(title=f"Admin panelda channel_to_count error",
+                                      error=f"channel_to_count={channel_to_count}\n message={obj.message_id} \n id={obj.id}")
+        return channel_to_count
+
+
+
+@admin.register(Message_history)
+class Message_historyAdmin(admin.ModelAdmin):
+    list_display = ('message', 'from_channel', 'to_channel', 'type', 'sent_status', 'time', 'created_at', 'updated_at')
+    search_fields = ('message', 'from_channel', 'to_channel', 'type', 'sent_status', 'time')
+    list_filter = ('from_channel', 'to_channel', 'type', 'sent_status', 'time')

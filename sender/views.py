@@ -76,22 +76,27 @@ def get_media_files_json_data(message_id):
 
 
     from_channel = models.Message.objects.get(message_id=message_id).channel_from
-    ##
-    channel_configs = setting_models.Channel_config.objects.filter(from_channel=from_channel)
-    channel_id_list = [channel_config.to_channel.channel_id for channel_config in channel_configs]
-    ##
+    from_channel_type=from_channel.type
+    my_channels_id_list=models.Channels.objects.filter(type=from_channel_type,my_channel=True).values_list('channel_id',flat=True)
+
     data_list = []
-    for ch_id in channel_id_list:
+    for ch_id in my_channels_id_list:
         caption = filter_caption(message_id,ch_id)
         media[0]['caption'] = caption
         media[0]['parse_mode'] = 'HTML'
         if caption is not None:
+            models.Message_history.objects.create(
+                message=models.Message.objects.get(message_id=message_id),
+                from_channel=from_channel,
+                to_channel=models.Channels.objects.get(channel_id=ch_id),
+                type=from_channel_type,
+                sent_status=False
+            ).save()
             data_list.append(
                 {
                     'data': {'chat_id': ch_id, 'media': json.dumps(media)},
                     'files': files,
-                    'token': setting_models.Channel_config.objects.get(to_channel__channel_id=ch_id,
-                                                               from_channel=from_channel).bot.bot_token,
+                    'token': models.Channels.objects.get(channel_id=ch_id).bot.bot_token,
                     'channel_from': from_channel.channel_id,
                     'message_id': message_id
                 }

@@ -99,11 +99,11 @@ DATABASES = {
 
 CACHES = {
     "default": {
-        "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": f"{env.str('REDIS_URL', 'redis://localhost:6379/0')}",
-        "KEY_PREFIX": "boilerplate",  # todo: you must change this with your project name or something else
-    }
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/0",
+    },
 }
+
 
 AUDITLOG_INCLUDE_ALL_MODELS = True
 
@@ -153,10 +153,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
 CELERY_BEAT_SCHEDULE = {
-    'send_message_task': {
-        'task': 'sender.celery_tasks.send_message_task',
-        #one of year
-        'schedule': crontab(minute=0, hour=0, day_of_month=1, month_of_year='*/1'),
+    'send-message-task': {
+        'task': 'sender.tasks.send_message_task',
+        #every 10 seconds
+        'schedule': crontab(minute='*/10'),
     },
 
 }

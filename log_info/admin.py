@@ -9,7 +9,7 @@ class MessageLogAdmin(admin.ModelAdmin):
 
 @admin.register(Listening_channels)
 class ListeningChannelsAdmin(admin.ModelAdmin):
-    list_display = ['channel_id', 'listening_channel', 'created_at', 'updated_at']
+    list_display = ['id', 'listening_channel', 'created_at', 'updated_at']
     list_filter = ['created_at']
     search_fields = ['channel_id']
 

@@ -1,15 +1,9 @@
+import datetime
+
 from django.db import models
+from django.utils import timezone
 
-from setting_ads.models import Channels
-
-
-class TimeStamp(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        abstract = True
-        db_table = 'timestamp'
+from setting_ads.models import Channels, Channel_type, TimeStamp
 
 
 class Filename(TimeStamp):
@@ -49,15 +43,16 @@ class Message(TimeStamp):
         db_table = 'message'
 
 
-class Message_sent_status(TimeStamp):
-    message=models.ForeignKey(Message,on_delete=models.CASCADE,related_name='message_sent_status',null=True,blank=True)
-    from_channel=models.ForeignKey(Channels,on_delete=models.CASCADE,related_name='from_channel',null=True,blank=True,limit_choices_to={'my_channel':False})
-    to_channel=models.ForeignKey(Channels,on_delete=models.CASCADE,related_name='to_channel',null=True,blank=True,limit_choices_to={'my_channel':True})
-    sent_status=models.BooleanField(default=False)
+class Message_history(TimeStamp):
+    message = models.ForeignKey(Message, on_delete=models.CASCADE, null=True, blank=True)
+    from_channel = models.ForeignKey(Channels, on_delete=models.CASCADE, related_name='from_channel', null=True,
+                                     blank=True, limit_choices_to={'my_channel': False})
+    to_channel = models.ForeignKey(Channels, on_delete=models.CASCADE, related_name='to_channel', null=True, blank=True,
+                                   limit_choices_to={'my_channel': True})
+    type = models.ForeignKey(Channel_type, on_delete=models.CASCADE, null=True, blank=True)
+    sent_status = models.BooleanField(default=False)
+    time = models.DateTimeField(null=True, blank=True)
 
-    class Meta:
-        db_table = 'message_sent_status'
-        verbose_name_plural = 'message_sent_status'
 
     def __str__(self):
         return self.message.message_id
