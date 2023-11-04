@@ -81,6 +81,9 @@ class Channels(TimeStamp):
         if self.type is None:
             raise ValidationError('Please select channel type')
 
+        if not self.channel_link.startswith('https://t.me/'):
+            raise(ValidationError('Please enter valid channel link'))
+
 
 
 
