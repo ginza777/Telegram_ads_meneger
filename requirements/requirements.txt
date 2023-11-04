@@ -10,3 +10,5 @@ gunicorn
 django-celery-results
 redis
 django-celery-beat
+django-redis
+
