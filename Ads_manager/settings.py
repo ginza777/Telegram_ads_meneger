@@ -156,7 +156,7 @@ CELERY_BEAT_SCHEDULE = {
     'send-message-task': {
         'task': 'sender.tasks.send_message_task',
         #every 10 seconds
-        'schedule': crontab(minute='*/3'),
+        'schedule': crontab(minute='*/1'),
     },
 
 }
