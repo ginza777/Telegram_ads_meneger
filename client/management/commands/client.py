@@ -23,6 +23,7 @@ channels =list( Channels.objects.filter(my_channel=False).values_list('channel_l
 print(channels)
 # ===========[log start]================
 listening_channels_view(list(channels))
+print("count:",len(channels))
 # ===========[log end]================
 
 # ThreadPoolExecutor obyektini yaratish
