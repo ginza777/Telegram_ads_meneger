@@ -19,6 +19,7 @@ class KeywordChannelAdsInline(admin.TabularInline):
 class ChannelsAdmin(admin.ModelAdmin):
     list_display = ('id', 'channel_name', 'channel_link', 'channel_id', 'my_channel', 'type', 'updated_at')
     inlines = [KeywordChannelAdsInline]
+    list_filter = ['my_channel', 'type']
 
 
 @admin.register(KeywordChannelAds)
