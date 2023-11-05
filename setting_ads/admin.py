@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Client_Settings, Bot, Channels, KeywordChannelAds,Channel_type
+from .models import Client_Settings, Bot, Channels, KeywordChannelAds, Channel_type, Channel_post_setting
+
 # Register your models here.
 
 admin.site.register(Client_Settings)
@@ -14,6 +15,9 @@ class KeywordChannelAdsInline(admin.TabularInline):
     model = KeywordChannelAds
     extra = 2
 
+@admin.register(Channel_post_setting)
+class Channel_post_settingAdmin(admin.ModelAdmin):
+    list_display = ('id', 'video', 'video_caption', 'photo', 'photo_caption', 'caption', 'text')
 
 @admin.register(Channels)
 class ChannelsAdmin(admin.ModelAdmin):

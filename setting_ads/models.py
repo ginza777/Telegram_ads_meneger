@@ -48,6 +48,15 @@ class Channel_type(models.Model):
     def __str__(self):
         return self.type
 
+class Channel_post_setting(models.Model):
+    #new
+    video=models.BooleanField(default=False)
+    video_caption=models.BooleanField(default=False)
+    photo=models.BooleanField(default=False)
+    photo_caption=models.BooleanField(default=False)
+    caption=models.BooleanField(default=False)
+    text=models.BooleanField(default=False)
+
 
 class Channels(TimeStamp):
     channel_name = models.CharField(max_length=250)
@@ -56,6 +65,10 @@ class Channels(TimeStamp):
     my_channel = models.BooleanField(default=False)
     bot = models.ForeignKey(Bot, on_delete=models.PROTECT, null=True, blank=True)
     type=models.ForeignKey(Channel_type,on_delete=models.PROTECT)
+    setting=models.OneToOneField(Channel_post_setting,on_delete=models.CASCADE,null=True,blank=True)
+
+
+
 
     def __str__(self):
         return self.channel_name

@@ -16,8 +16,7 @@ class Message_log(TimeStamp):
 
 
 class Listening_channels(TimeStamp):
-    listening_channel = models.ForeignKey(Channels, on_delete=models.SET_NULL, related_name='listening_channels',
-                                          null=True, blank=True,unique=True)
+    listening_channel = models.OneToOneField(Channels, on_delete=models.CASCADE, related_name='listening_channel',null=True,blank=True)
 
 
     class Meta:
