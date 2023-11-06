@@ -82,7 +82,7 @@ def get_media_files_json_data(message_id):
     data_list = []
     for ch_id in my_channels_id_list:
         caption = filter_caption(message_id,ch_id)
-        media[0]['caption'] = caption
+        media[0]['caption'] = f"#{message_id}\n"+caption
         media[0]['parse_mode'] = 'HTML'
         if caption is not None:
             models.Message_history.objects.create(
