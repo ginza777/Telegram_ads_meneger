@@ -5,7 +5,7 @@ sudo systemctl start nginx
 sudo systemctl status nginx
 sudo nginx -t
 sudo systemctl restart nginx
-
+apt install python3-virtualenv
 
 sudo apt update
 sudo apt install python3-venv python3-dev libpq-dev postgresql postgresql-contrib nginx curl
@@ -25,8 +25,9 @@ pip install django gunicorn psycopg2-binary
 
 
 python manage.py migrate
-python manage.py createsuperuser
 python manage.py collectstatic
+python manage.py createsuperuser
+
 
 sudo ufw allow 8000
 python manage.py runserver 0.0.0.0:8000
@@ -80,12 +81,12 @@ sudo journalctl -u ads
 sudo systemctl daemon-reload
 sudo systemctl restart ads
 
-sudo nano /etc/nginx/sites-available/crm.co.uz
+sudo nano /etc/nginx/sites-available/sherzamon.cloud
 
 
 server {
     listen 80;
-    server_name crm.co.uz;
+    server_name sherzamon.cloud;
 
     location = /favicon.ico { access_log off; log_not_found off; }
     location /static/ {
@@ -100,7 +101,7 @@ server {
 
 
 
-sudo ln -s /etc/nginx/sites-available/crm.co.uz /etc/nginx/sites-enabled
+sudo ln -s /etc/nginx/sites-available/sherzamon.cloud /etc/nginx/sites-enabled
 sudo nginx -t
 sudo systemctl restart nginx
 journalctl -xeu nginx.service
@@ -112,7 +113,7 @@ sudo ufw allow 'Nginx Full'
 #certbot
 
 sudo apt install certbot python3-certbot-nginx
-sudo nano /etc/nginx/sites-available/crm.co.uz
+sudo nano /etc/nginx/sites-available/sherzamon.cloud
 sudo nginx -t
 sudo systemctl reload nginx
 sudo ufw enable
