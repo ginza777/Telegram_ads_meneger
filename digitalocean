@@ -6,6 +6,8 @@ sudo systemctl status nginx
 sudo nginx -t
 sudo systemctl restart nginx
 apt install python3-virtualenv
+apt install redis-server
+
 
 sudo apt update
 sudo apt install python3-venv python3-dev libpq-dev postgresql postgresql-contrib nginx curl
@@ -120,6 +122,6 @@ sudo ufw enable
 sudo ufw allow 'Nginx Full'
 sudo ufw delete allow 'Nginx HTTP'
 sudo ufw status
-sudo certbot --nginx -d crm.co.uz
+sudo certbot --nginx -d sherzamon.cloud
 sudo systemctl status certbot.timer
 sudo certbot renew --dry-run

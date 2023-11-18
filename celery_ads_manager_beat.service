@@ -1,0 +1,13 @@
+[Unit]
+Description=Celery Ads Manager Beat Scheduler
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/var/projects/ads_manager/Telegram_ads_meneger
+ExecStart=/bin/bash -c '/var/projects/ads_manager/env/bin/celery -A Ads_manager beat --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler'
+Restart=always
+User=root
+
+[Install]
+WantedBy=multi-user.target

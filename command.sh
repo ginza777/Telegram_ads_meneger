@@ -6,7 +6,7 @@
 sudo systemctl daemon-reload
 
 # Celery xizmatini qayta boshlash
-sudo systemctl restart celery_ads_manager
+sudo systemctl restart celery_ads_manager_worker
 
 # Celery beat xizmatini qayta boshlash (agar kerak bo'lsa)
 sudo systemctl restart celery_ads_manager_beat
