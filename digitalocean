@@ -1,0 +1,124 @@
+sudo apt update
+sudo apt install nginx
+sudo systemctl enable nginx
+sudo systemctl start nginx
+sudo systemctl status nginx
+sudo nginx -t
+sudo systemctl restart nginx
+
+
+sudo apt update
+sudo apt install python3-venv python3-dev libpq-dev postgresql postgresql-contrib nginx curl
+
+sudo -u postgres psql
+
+CREATE DATABASE ads;
+CREATE USER sherzamon WITH PASSWORD 'postgres';
+
+ALTER ROLE sherzamon SET client_encoding TO 'utf8';
+ALTER ROLE sherzamon SET default_transaction_isolation TO 'read committed';
+ALTER ROLE sherzamon SET timezone TO 'UTC';
+
+GRANT ALL PRIVILEGES ON DATABASE ads TO sherzamon;
+
+pip install django gunicorn psycopg2-binary
+
+
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py collectstatic
+
+sudo ufw allow 8000
+python manage.py runserver 0.0.0.0:8000
+pip install gunicorn
+
+sudo nano /etc/systemd/system/ads.socket
+
+[Unit]
+Description=gunicorn socket
+
+[Socket]
+ListenStream=/run/ads.sock
+
+[Install]
+WantedBy=sockets.target
+
+
+sudo nano /etc/systemd/system/ads.service
+
+
+[Unit]
+Description=gunicorn daemon
+Requires=ads.socket
+After=network.target
+
+[Service]
+User=root
+Group=www-data
+WorkingDirectory=/var/opt/projects/ads_manager/Telegram_ads_meneger
+ExecStart=/var/opt/projects/ads_manager/env/bin/gunicorn \
+          --access-logfile - \
+          --workers 4 \
+          --bind unix:/run/ads.sock \
+          Ads_manager.wsgi:application
+
+[Install]
+WantedBy=multi-user.target
+
+
+sudo systemctl start ads.socket
+sudo systemctl enable ads.socket
+
+sudo systemctl status ads.socket
+file /run/ads.sock
+sudo journalctl -u ads.socket
+sudo systemctl status ads
+curl --unix-socket /run/ads.sock localhost
+sudo systemctl status ads
+sudo journalctl -u ads
+
+sudo systemctl daemon-reload
+sudo systemctl restart ads
+
+sudo nano /etc/nginx/sites-available/crm.co.uz
+
+
+server {
+    listen 80;
+    server_name crm.co.uz;
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location /static/ {
+        root /var/opt/projects/ads_manager/Telegram_ads_meneger;
+    }
+
+    location / {
+        include proxy_params;
+        proxy_pass http://unix:/run/ads.sock;
+    }
+}
+
+
+
+sudo ln -s /etc/nginx/sites-available/crm.co.uz /etc/nginx/sites-enabled
+sudo nginx -t
+sudo systemctl restart nginx
+journalctl -xeu nginx.service
+sudo ufw delete allow 8000
+sudo ufw allow 'Nginx Full'
+
+
+
+#certbot
+
+sudo apt install certbot python3-certbot-nginx
+sudo nano /etc/nginx/sites-available/crm.co.uz
+sudo nginx -t
+sudo systemctl reload nginx
+sudo ufw enable
+sudo ufw allow 'Nginx Full'
+sudo ufw delete allow 'Nginx HTTP'
+sudo ufw status
+sudo certbot --nginx -d crm.co.uz
+sudo systemctl status certbot.timer
+sudo certbot renew --dry-run
