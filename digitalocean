@@ -55,8 +55,8 @@ After=network.target
 [Service]
 User=root
 Group=www-data
-WorkingDirectory=/var/opt/projects/ads_manager/Telegram_ads_meneger
-ExecStart=/var/opt/projects/ads_manager/env/bin/gunicorn \
+WorkingDirectory=/var/projects/ads_manager/Telegram_ads_meneger
+ExecStart=/var/projects/ads_manager/env/bin/gunicorn \
           --access-logfile - \
           --workers 4 \
           --bind unix:/run/ads.sock \
@@ -89,7 +89,7 @@ server {
 
     location = /favicon.ico { access_log off; log_not_found off; }
     location /static/ {
-        root /var/opt/projects/ads_manager/Telegram_ads_meneger;
+        root /var/projects/ads_manager/Telegram_ads_meneger;
     }
 
     location / {
