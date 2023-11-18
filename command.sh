@@ -1,5 +1,7 @@
 #!/bin/bash
 
+
+
 # Systemd xizmatlarini qayta boshlash
 sudo systemctl daemon-reload
 

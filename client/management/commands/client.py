@@ -19,22 +19,21 @@ is_processing = False
 
 # Bot va Client sozlamalari
 env = Client_Settings.objects.last()
-channels =list( Channels.objects.filter(my_channel=False).values_list('channel_link', flat=True))
+channels = list(Channels.objects.filter(my_channel=False).values_list('channel_link', flat=True))
 print(channels)
 # ===========[log start]================
 listening_channels_view(list(channels))
-print("count:",len(channels))
+print("count:", len(channels))
 # ===========[log end]================
 
 # ThreadPoolExecutor obyektini yaratish
 executor = ThreadPoolExecutor(max_workers=3)
-
-
 async def process_queue(client):
     global is_processing
     while not message_queue.empty():
         is_processing = True
         event = await message_queue.get()
+        print(event.message)
         if isinstance(event.message, Message) and hasattr(event.message, 'media'):
             print("new message")
             # Rasmlar  va Captionlar uchun
@@ -56,11 +55,13 @@ async def process_queue(client):
 async def main():
     client = TelegramClient(env.phone, env.api_id, env.api_hash)
     await client.start()
+
     @client.on(events.NewMessage(chats=channels))
     async def my_event_handler(event):
         if not is_processing:
             create_task(process_queue(client))
         await message_queue.put(event)
+
     await client.run_until_disconnected()
 
 
@@ -184,6 +185,7 @@ def crate_message(message_id, channel_id=None, single_photo=False, photo_file=No
             message_log_view(message, f"IF SINGLE_PHOTO : EXCEPT: SINGLE_PHOTO={single_photo} saqlanmadi sabab: {e}")
             # ===========[log end]================
 
+
 async def write_caption_to_file(file_path, caption_text):
     try:
         with open(file_path, 'w') as f:
@@ -199,5 +201,6 @@ async def write_caption_to_file(file_path, caption_text):
 
 class Command(BaseCommand):
     help = 'Starts the Telegram listener'
+
     def handle(self, *args, **options):
         asyncio.run(main())
