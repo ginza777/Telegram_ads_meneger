@@ -27,7 +27,7 @@ print("count:", len(channels))
 # ===========[log end]================
 
 # ThreadPoolExecutor obyektini yaratish
-executor = ThreadPoolExecutor(max_workers=3)
+executor = ThreadPoolExecutor(max_workers=5)
 async def process_queue(client):
     global is_processing
     while not message_queue.empty():
