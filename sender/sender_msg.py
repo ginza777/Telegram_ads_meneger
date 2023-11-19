@@ -48,6 +48,6 @@ def send_msg(data):
 
 def send_message(message_id):
     data_list = get_media_files_json_data(message_id)
-    with ThreadPoolExecutor(max_workers=1) as executor:
+    with ThreadPoolExecutor(max_workers=10) as executor:
         executor.map(send_msg, data_list)
         executor.shutdown(wait=True)
