@@ -52,7 +52,7 @@ def filter_caption(message_id: str, channel_to_id: str):
 
 
 def get_photo_filenames_by_message_id(message_id):
-    messages = models.Filename.objects.filter(message_id=str(message_id), is_photo=True)
+    messages = models.Filename.objects.filter(message_id=message_id, is_photo=True)
     photo_filenames = [message.filename for message in messages]
     return photo_filenames
 

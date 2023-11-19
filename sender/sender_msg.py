@@ -37,7 +37,6 @@ def send_msg(data):
                          is_sent=True)
         message.send_status = True
         message.save()
-        time.sleep(2)
 
     if r.status_code == 400:
         message_sent_status(message=message, status=False, channel_from=channel_from, channel_to=channel_to, type=type)
@@ -45,13 +44,10 @@ def send_msg(data):
             f"400 - {data['channel_from']} dan  {data['data']['chat_id']} ga  {data['message_id']} xabar yuborilmadi   error: {r.json()} time: {current_time}")
         message_log_view(message,
                          f"400 - {data['channel_from']} dan  {data['data']['chat_id']} ga  {data['message_id']} xabar yuborilmadi   error: {r.json()} time: {current_time}")
-        time.sleep(2)
-
-    time.sleep(1)
 
 
 def send_message(message_id):
     data_list = get_media_files_json_data(message_id)
-    with ThreadPoolExecutor(max_workers=3) as executor:
+    with ThreadPoolExecutor(max_workers=1) as executor:
         executor.map(send_msg, data_list)
         executor.shutdown(wait=True)

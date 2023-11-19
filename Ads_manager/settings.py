@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+from datetime import timedelta
 
 import environ
 from celery.schedules import crontab
@@ -156,7 +157,7 @@ CELERY_BEAT_SCHEDULE = {
     'send-message-task': {
         'task': 'sender.tasks.send_message_task',
         #every 10 seconds
-        'schedule': crontab(minute='*/1'),
+        'schedule': timedelta(seconds=90),
     },
 
 }
