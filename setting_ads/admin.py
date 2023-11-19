@@ -29,7 +29,7 @@ class ChannelsAdmin(admin.ModelAdmin):
 @admin.register(KeywordChannelAds)
 class KeywordChannelAdsAdmin(admin.ModelAdmin):
     list_display = ('id', 'text', 'channel', 'created_at', 'updated_at')
-    list_filter = [ 'channel__type__type_name']
+    list_filter = [ 'channel__type']
 
 admin.site.register(Channel_type)
 
