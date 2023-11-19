@@ -33,9 +33,9 @@ async def process_queue(client):
     while not message_queue.empty():
         is_processing = True
         event = await message_queue.get()
-        print(event.message)
+        # print(event.message)
         if isinstance(event.message, Message) and hasattr(event.message, 'media'):
-            print("new message")
+            print(f"new message")
             # Rasmlar  va Captionlar uchun
             if isinstance(event.message.media, MessageMediaPhoto):
                 if event.message.grouped_id is not None:
