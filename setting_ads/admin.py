@@ -21,9 +21,12 @@ class Channel_post_settingAdmin(admin.ModelAdmin):
 
 @admin.register(Channels)
 class ChannelsAdmin(admin.ModelAdmin):
-    list_display = ('id', 'channel_name', 'channel_link', 'channel_id', 'my_channel', 'type', 'updated_at')
+    list_display = ('id', 'channel_name', 'channel_link', 'channel_id', 'my_channel', 'type','keyword_count', 'updated_at')
     inlines = [KeywordChannelAdsInline]
     list_filter = ['my_channel', 'type']
+
+    def keyword_count(self, obj):
+        return obj.keywordchannelads_set.count()
 
 
 @admin.register(KeywordChannelAds)
