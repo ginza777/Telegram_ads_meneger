@@ -6,34 +6,33 @@ from client import models
 from setting_ads import models as setting_models
 
 
-
 def random_string(length):
     characters = string.ascii_letters
     random_string = ''.join(random.choice(characters) for _ in range(length))
     return random_string
 
+
 def check_caption_file_exist(message_id):
-    file_path=models.Filename.objects.get(message_id=message_id,is_caption=True).filename
+    file_path = models.Filename.objects.get(message_id=message_id, is_caption=True).filename
     if os.path.exists(file_path):
         return True
     return False
 
 
-
 def filter_caption(message_id: str, channel_to_id: str):
-    message=models.Message.objects.get(message_id=message_id)
+    message = models.Message.objects.get(message_id=message_id)
 
     if models.Message.objects.get(message_id=message_id).caption:
         if check_caption_file_exist(message_id=message_id):
             caption_file_path = models.Filename.objects.get(message_id=message.message_id, is_caption=True).filename
 
-            channel_from= models.Message.objects.get(message_id=message_id).channel_from
-            channel_to=setting_models.Channels.objects.get(channel_id=channel_to_id)
+            channel_from = models.Message.objects.get(message_id=message_id).channel_from
+            channel_to = setting_models.Channels.objects.get(channel_id=channel_to_id)
 
             keyword_texts = setting_models.KeywordChannelAds.objects.filter(channel=channel_from)
             keyword_text_list = [keyword.text for keyword in keyword_texts]
 
-            my_channel_text=setting_models.KeywordChannelAds.objects.get(channel=channel_to).text
+            my_channel_text = setting_models.KeywordChannelAds.objects.get(channel=channel_to).text
 
             with open(caption_file_path, 'r') as f:
                 caption = f.read()
@@ -74,15 +73,15 @@ def get_media_files_json_data(message_id):
                 file_data = f.read()
             files[random_name] = file_data
 
-
     from_channel = models.Message.objects.get(message_id=message_id).channel_from
-    from_channel_type=from_channel.type
-    my_channels_id_list=models.Channels.objects.filter(type=from_channel_type,my_channel=True).values_list('channel_id',flat=True)
+    from_channel_type = from_channel.type
+    my_channels_id_list = models.Channels.objects.filter(type=from_channel_type, my_channel=True).values_list(
+        'channel_id', flat=True)
 
     data_list = []
     for ch_id in my_channels_id_list:
-        caption = filter_caption(message_id,ch_id)
-        media[0]['caption'] = f"#{message_id}\n"+caption
+        caption = filter_caption(message_id, ch_id)
+        media[0]['caption'] = f"#{message_id}\n" + caption
         media[0]['parse_mode'] = 'HTML'
         if caption is not None:
             models.Message_history.objects.create(
@@ -112,4 +111,3 @@ async def write_caption(file_path, caption_text):
         return True
     except:
         return False
-
