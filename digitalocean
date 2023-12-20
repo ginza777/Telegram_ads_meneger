@@ -14,7 +14,7 @@ sudo apt install python3-venv python3-dev libpq-dev postgresql postgresql-contri
 
 sudo -u postgres psql
 
-CREATE DATABASE ads;
+CREATE DATABASE ads2;
 CREATE USER sherzamon WITH PASSWORD 'postgres';
 
 ALTER ROLE sherzamon SET client_encoding TO 'utf8';
