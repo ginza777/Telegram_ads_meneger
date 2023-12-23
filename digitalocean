@@ -107,8 +107,8 @@ sudo ln -s /etc/nginx/sites-available/sherzamon.cloud /etc/nginx/sites-enabled
 sudo nginx -t
 sudo systemctl restart nginx
 journalctl -xeu nginx.service
-sudo ufw delete allow 8000
-sudo ufw allow 'Nginx Full'
+
+
 
 
 
@@ -118,10 +118,11 @@ sudo apt install certbot python3-certbot-nginx
 sudo nano /etc/nginx/sites-available/sherzamon.cloud
 sudo nginx -t
 sudo systemctl reload nginx
-sudo ufw enable
-sudo ufw allow 'Nginx Full'
-sudo ufw delete allow 'Nginx HTTP'
-sudo ufw status
 sudo certbot --nginx -d sherzamon.cloud
 sudo systemctl status certbot.timer
-sudo certbot renew --dry-run
+sudo certbot renew --dry-run\
+
+
+
+sudo nano /etc/systemd/system/celery_ads_manager_beat.service
+sudo nano /etc/systemd/system/celery_ads_manager_worker.service
