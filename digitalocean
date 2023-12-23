@@ -31,7 +31,7 @@ python manage.py collectstatic
 python manage.py createsuperuser
 
 
-sudo ufw allow 8000
+
 python manage.py runserver 0.0.0.0:8000
 pip install gunicorn
 
@@ -118,9 +118,9 @@ sudo apt install certbot python3-certbot-nginx
 sudo nano /etc/nginx/sites-available/sherzamon.cloud
 sudo nginx -t
 sudo systemctl reload nginx
-sudo certbot --nginx -d sherzamon.cloud
+sudo certbot --nginx -d ads.sherzamon.cloud
 sudo systemctl status certbot.timer
-sudo certbot renew --dry-run\
+sudo certbot renew --dry-run
 
 
 
