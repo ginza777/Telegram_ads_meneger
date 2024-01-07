@@ -47,7 +47,11 @@ def send_msg(data):
 
 
 def send_message(message_id):
-    data_list = get_media_files_json_data(message_id)
+    try:
+        data_list = get_media_files_json_data(message_id)
+    except:
+        message_log_view(message_id, f"send_message: get_media_files_json_data error message_id={message_id}")
+        return False
     with ThreadPoolExecutor(max_workers=10) as executor:
         executor.map(send_msg, data_list)
         executor.shutdown(wait=True)
