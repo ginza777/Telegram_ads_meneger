@@ -37,7 +37,7 @@ class MessageAdmin(admin.ModelAdmin):
 
     list_filter = ( 'delete_status', 'send_status', 'end')
     #search filter
-    search_fields = ('message_id', 'caption', 'photo', 'channel_from_name', 'channel_to_count', 'delete_status', 'single_photo', 'send_status',)
+    search_fields = ('message_id', )
 
 @admin.register(Message_history)
 class Message_historyAdmin(admin.ModelAdmin):
