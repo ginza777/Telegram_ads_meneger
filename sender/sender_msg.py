@@ -47,6 +47,10 @@ def send_msg(data):
 
 
 def send_message(message_id):
+    if not Message.objects.filter(message_id=message_id).exists() or not Message.objects.get(message_id=message_id).channel_from:
+        message_log_view(message_id, f"send_message: Message.objects.filter(message_id=message_id).exists() error message_id={message_id}")
+        return False
+
     try:
         data_list = get_media_files_json_data(message_id)
     except:
