@@ -27,4 +27,7 @@ sudo systemctl restart ads.service
 
 # Nginx konfiguratsiyasini tekshirish va Nginx ni qayta boshlash
 sudo nginx -t && sudo systemctl restart nginx
+
+
 sudo systemctl status celery_ads_manager_worker
+sudo systemctl status celery_ads_manager_beat
