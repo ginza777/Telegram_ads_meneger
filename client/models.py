@@ -37,6 +37,8 @@ class Message(TimeStamp):
         #if not channel_from
         if self.channel_from is None or self.channel_from=='null':
             self.delete_status = True
+            self.end = True
+            self.send_status = True
 
         super().save(*args, **kwargs)
 
