@@ -50,13 +50,10 @@ def send_message(message_id):
     time.sleep(2)
     if not Message.objects.filter(message_id=message_id).exists() or Message.objects.get(message_id=message_id).channel_from==None or Message.objects.get(message_id=message_id).channel_from=='null':
         message_log_view(message_id, f"send_message: Message.objects.filter(message_id=message_id).exists() error message_id={message_id}")
-        return False
+        return
 
-    try:
+    if Message.objects.filter(message_id=message_id).exists() and Message.objects.get(message_id=message_id).channel_from!=None and Message.objects.get(message_id=message_id).channel_from!='null':
         data_list = get_media_files_json_data(message_id)
-    except:
-        message_log_view(message_id, f"send_message: get_media_files_json_data error message_id={message_id}")
-        return False
-    with ThreadPoolExecutor(max_workers=3) as executor:
-        executor.map(send_msg, data_list)
-        executor.shutdown(wait=True)
+        with ThreadPoolExecutor(max_workers=3) as executor:
+            executor.map(send_msg, data_list)
+            executor.shutdown(wait=True)
