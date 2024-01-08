@@ -34,6 +34,10 @@ class Message(TimeStamp):
     def save(self, *args, **kwargs):
         if self.caption and self.photo:
             self.delete_status = False
+        #if not channel_from
+        if self.channel_from is None or self.channel_from=='null':
+            self.delete_status = True
+
         super().save(*args, **kwargs)
 
     def __str__(self):
