@@ -35,7 +35,7 @@ class MessageAdmin(admin.ModelAdmin):
                                       error=f"channel_to_count={channel_to_count}\n message={obj.message_id} \n id={obj.id}")
         return channel_to_count
 
-    list_filter = ( 'delete_status', 'send_status', 'end')
+    list_filter = ( 'delete_status', 'send_status', 'end','channel_from')
     #search filter
     search_fields = ('message_id', )
 
