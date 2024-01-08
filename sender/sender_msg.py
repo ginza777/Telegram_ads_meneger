@@ -48,7 +48,7 @@ def send_msg(data):
 
 def send_message(message_id):
     time.sleep(2)
-    if not Message.objects.filter(message_id=message_id).exists() or not Message.objects.get(message_id=message_id).channel_from:
+    if not Message.objects.filter(message_id=message_id).exists() or Message.objects.get(message_id=message_id).channel_from==None or Message.objects.get(message_id=message_id).channel_from=='null':
         message_log_view(message_id, f"send_message: Message.objects.filter(message_id=message_id).exists() error message_id={message_id}")
         return False
 
