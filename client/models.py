@@ -30,15 +30,14 @@ class Message(TimeStamp):
     send_status = models.BooleanField(default=False)
     photo_count = models.IntegerField(default=0)
     end = models.BooleanField(default=False)
+    has_channel= models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         if self.caption and self.photo:
             self.delete_status = False
         #if not channel_from
-        if self.channel_from is None or self.channel_from=='null':
-            self.delete_status = True
-            self.end = True
-            self.send_status = True
+        if not self.channel_from is None or not self.channel_from=='null':
+            self.has_channel=True
 
         super().save(*args, **kwargs)
 
