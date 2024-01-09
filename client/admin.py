@@ -14,7 +14,7 @@ class FilenameAdmin(admin.ModelAdmin):
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):
     list_display = (
-    'message_id', 'caption', 'photo', 'channel_from_name','has_channel', 'channel_to_count', 'delete_status', 'single_photo', 'send_status',
+    'message_id', 'caption', 'photo', 'channel_from_name', 'channel_to_count', 'delete_status', 'single_photo', 'send_status',
     'photo_count', 'end', 'updated_at')
 
     def channel_from_name(self, obj):
