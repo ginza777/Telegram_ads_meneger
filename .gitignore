@@ -93,8 +93,8 @@ venv/
 ENV/
 env.bak/
 venv.bak/
-./mydatabase.sqlite3
-mydatabase.sqlite3
+#./mydatabase.sqlite3
+#mydatabase.sqlite3
 
 # Spyder project settings
 .spyderproject

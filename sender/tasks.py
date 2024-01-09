@@ -61,7 +61,7 @@ def check_files_existence(message_id):
 
 @shared_task
 def send_message_task():
-    messages = Message.objects.filter(send_status=False, delete_status=False)
+    messages = Message.objects.filter(send_status=False, delete_status=False,has_channel=True)
     for message in messages:
         if check_photo_caption_with_count(message_id=message.message_id):
             if check_files_existence(message_id=message.message_id):
