@@ -36,13 +36,10 @@ class Message(TimeStamp):
         if self.caption and self.photo:
             self.delete_status = False
 
-
         if self.channel_from is None or self.channel_from == 'null':
             self.has_channel = False
-        else:
+        if self.channel_from is not None and self.channel_from != 'null':
             self.has_channel = True
-
-
 
         super().save(*args, **kwargs)
 
