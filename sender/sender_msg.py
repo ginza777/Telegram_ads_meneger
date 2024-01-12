@@ -19,7 +19,8 @@ def send_msg(data):
     files = {key: (f"file{index}", file, 'application/octet-stream') for index, (key, file) in
              enumerate(data['files'].items())}
 
-    r = requests.post(url, data=data['data'], files=files)
+    data['data']['disable_notification'] = True
+    r = requests.post(url, data=data['data'], files=files,)
     current_time = datetime.datetime.fromtimestamp(time.time())
 
     channel_from = Channels.objects.get(channel_id=data['channel_from'])
