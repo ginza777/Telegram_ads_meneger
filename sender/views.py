@@ -97,7 +97,8 @@ def get_media_files_json_data(message_id):
                     'files': files,
                     'token': models.Channels.objects.get(channel_id=ch_id).bot.bot_token,
                     'channel_from': from_channel.channel_id,
-                    'message_id': message_id
+                    'message_id': message_id,
+                    'disable_notification': True
                 }
             )
 
