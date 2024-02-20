@@ -9,6 +9,7 @@ sudo systemctl daemon-reload
 sudo systemctl enable celery_ads_manager_worker
 sudo systemctl start celery_ads_manager_worker
 sudo systemctl restart celery_ads_manager_worker
+sudo systemctl status celery_ads_manager_worker
 
 
 
@@ -16,6 +17,9 @@ sudo systemctl restart celery_ads_manager_worker
 sudo systemctl enable celery_ads_manager_beat
 sudo systemctl start celery_ads_manager_beat
 sudo systemctl restart celery_ads_manager_beat
+sudo systemctl status celery_ads_manager_beat
+
+
 
 
 # Telegram_ads.socket va telegram_ads.service xizmatlarini qayta boshlash
