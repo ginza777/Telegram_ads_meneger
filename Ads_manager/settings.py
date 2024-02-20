@@ -89,21 +89,16 @@ WSGI_APPLICATION = 'Ads_manager.wsgi.application'
 
 DATABASES = {
     "default": {
-        "ENGINE": env.str("DB_ENGINE"),
-        "NAME": env.str("DB_NAME"),
-        "USER": env.str("DB_USER"),
-        "PASSWORD": env.get_value("DB_PASSWORD"),
-        "HOST": env.str("DB_HOST"),
-        "PORT": env.str("DB_PORT"),
-
-    },
-    "settings_ads_database": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": "mydatabase.sqlite3",
     }
+    # "settings_ads_database": {
+    #     "ENGINE": "django.db.backends.sqlite3",
+    #     "NAME": "mydatabase.sqlite3",
+    # }
 }
 
-DATABASE_ROUTERS = ['setting_ads.routers.AppRouter']
+# DATABASE_ROUTERS = ['setting_ads.routers.AppRouter']
 
 
 CACHES = {

@@ -11,7 +11,7 @@ class TimeStamp(models.Model):
     class Meta:
         abstract = True
         db_table = 'timestamp'
-        app_label = 'setting_ads'
+        # app_label = 'settings_ads_database'
 
 
 class Client_Settings(TimeStamp):
@@ -26,7 +26,7 @@ class Client_Settings(TimeStamp):
 
     class Meta:
         db_table = 'client_settings'
-        app_label = 'setting_ads'
+        # app_label = 'settings_ads_database'
 
     def save(self, *args, **kwargs):
         if self.session:
@@ -44,7 +44,7 @@ class Bot(TimeStamp):
 
     class Meta:
         db_table = 'bot_settings'
-        app_label = 'setting_ads'
+        # app_label = 'settings_ads_database'
 
 
 class Channel_type(models.Model):
@@ -63,8 +63,8 @@ class Channel_post_setting(models.Model):
     caption = models.BooleanField(default=False)
     text = models.BooleanField(default=False)
 
-    class Meta:
-        app_label = 'setting_ads'
+    # class Meta:
+    #     app_label = 'setting_ads'
 
 
 class Channels(TimeStamp):
@@ -82,7 +82,7 @@ class Channels(TimeStamp):
     class Meta:
         db_table = 'channels'
         unique_together = ('channel_id', 'my_channel')
-        app_label = 'setting_ads'
+        # app_label = 'setting_ads'
 
     def save(self, *args, **kwargs):
         if not self.channel_id.startswith('-'):
@@ -121,7 +121,7 @@ class KeywordChannelAds(TimeStamp):
     class Meta:
         db_table = 'keywordchannelads'
         unique_together = ('text', 'channel')
-        app_label = 'setting_ads'
+        # app_label = 'setting_ads'
 
     def clean(self):
         if self.channel.my_channel and KeywordChannelAds.objects.filter(channel=self.channel).exclude(
