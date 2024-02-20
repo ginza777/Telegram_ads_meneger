@@ -43,9 +43,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'client.apps.ClientConfig',
     'django_celery_results',
     'django_celery_beat',
+    #local apps
+    'client.apps.ClientConfig',
     'log_info',
     'sender',
     'setting_ads',
@@ -90,13 +91,20 @@ DATABASES = {
     "default": {
         "ENGINE": env.str("DB_ENGINE"),
         "NAME": env.str("DB_NAME"),
-        # "USER": env.str("DB_USER"),
-        # "PASSWORD": env.get_value("DB_PASSWORD"),
-        # "HOST": env.str("DB_HOST"),
-        # "PORT": env.str("DB_PORT"),
+        "USER": env.str("DB_USER"),
+        "PASSWORD": env.get_value("DB_PASSWORD"),
+        "HOST": env.str("DB_HOST"),
+        "PORT": env.str("DB_PORT"),
 
+    },
+    "settings_ads_database": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": "mydatabase.sqlite3",
     }
 }
+
+DATABASE_ROUTERS = ['setting_ads.routers.AppRouter']
+
 
 CACHES = {
     "default": {
