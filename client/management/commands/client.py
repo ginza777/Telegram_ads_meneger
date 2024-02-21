@@ -1,18 +1,19 @@
 import asyncio
+from asyncio import Queue, create_task
 from concurrent.futures import ThreadPoolExecutor
 
 from asgiref.sync import sync_to_async
 from django.core.management.base import BaseCommand
 from telethon import TelegramClient, events
 from telethon.tl.types import Message, MessageMediaPhoto
-from asyncio import Queue, create_task
-from sender.views import random_string
+
 from client.models import Filename
 from client.models import Message as MessageModel
 from log_info.models import SomeErrors
+from log_info.views import listening_channels_view, message_log_view
+from sender.views import random_string
 from setting_ads.models import Channels
 from setting_ads.models import Client_Settings
-from log_info.views import listening_channels_view, message_log_view
 
 message_queue = Queue()
 is_processing = False
@@ -28,6 +29,8 @@ print("count:", len(channels))
 
 # ThreadPoolExecutor obyektini yaratish
 executor = ThreadPoolExecutor(max_workers=5)
+
+
 async def process_queue(client):
     global is_processing
     while not message_queue.empty():

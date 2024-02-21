@@ -69,7 +69,7 @@ class Channels(models.Model):
     channel_link = models.CharField(max_length=250)
     channel_id = models.CharField(max_length=100, unique=True)
     my_channel = models.BooleanField(default=False)
-    bot = models.ForeignKey(Bot, on_delete=models.PROTECT, null=True, blank=True)
+    bot = models.ForeignKey(Bot, on_delete=models.SET_NULL, null=True, blank=True)
     type = models.ForeignKey(Channel_type, on_delete=models.PROTECT)
     setting = models.OneToOneField(Channel_post_setting, on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -83,27 +83,27 @@ class Channels(models.Model):
         unique_together = ('channel_id', 'my_channel')
         # app_label = 'setting_ads'
 
-    def save(self, *args, **kwargs):
-        if not self.channel_id.startswith('-'):
-            if self.channel_id.startswith('100'):
-                self.channel_id = '-' + self.channel_id
-            else:
-                self.channel_id = '-100' + self.channel_id
-        if self.my_channel and self.bot is None:
-            raise ValidationError('This channel is my channel, please select bot')
-        if not self.my_channel:
-            self.bot = None
-        if self.my_channel and self.bot is not None:
-            res = send_msg('Hello', self.bot.bot_token, self.channel_id)
-            if not res:
-                raise ValidationError('This bot did not send message to this channel')
-        if self.type is None:
-            raise ValidationError('Please select channel type')
-
-        if not self.channel_link.startswith('https://t.me/'):
-            raise (ValidationError('Please enter valid channel link'))
-
-        super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     if not self.channel_id.startswith('-'):
+    #         if self.channel_id.startswith('100'):
+    #             self.channel_id = '-' + self.channel_id
+    #         else:
+    #             self.channel_id = '-100' + self.channel_id
+    #     if self.my_channel and self.bot is None:
+    #         raise ValidationError('This channel is my channel, please select bot')
+    #     if not self.my_channel:
+    #         self.bot = None
+    #     if self.my_channel and self.bot is not None:
+    #         res = send_msg('Hello', self.bot.bot_token, self.channel_id)
+    #         if not res:
+    #             raise ValidationError('This bot did not send message to this channel')
+    #     if self.type is None:
+    #         raise ValidationError('Please select channel type')
+    #
+    #     if not self.channel_link.startswith('https://t.me/'):
+    #         raise (ValidationError('Please enter valid channel link'))
+    #
+    #     super().save(*args, **kwargs)
 
     def clean(self):
         if Channels.objects.filter(channel_id=self.channel_id).exclude(id=self.id).exists():
