@@ -26,3 +26,5 @@ class Command(BaseCommand):
         send_to_telegram(bot_token, chat_id)
 
 
+
+

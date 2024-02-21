@@ -4,22 +4,14 @@ from django.db import models
 from sender.sender import send_msg
 
 
-class TimeStamp(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        abstract = True
-        db_table = 'timestamp'
-        # app_label = 'settings_ads_database'
-
-
-class Client_Settings(TimeStamp):
+class Client_Settings(models.Model):
     api_id = models.CharField(max_length=100, default='29441076')
     api_hash = models.CharField(max_length=100, default='2c170fe7bc8b8c8f8a1e1ad72db9710e')
     phone = models.CharField(max_length=100, default='+998993485501')
     token = models.CharField(max_length=100, null=True, blank=True)
     session = models.FileField(upload_to='session', null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.phone
@@ -34,10 +26,12 @@ class Client_Settings(TimeStamp):
         super().save(*args, **kwargs)
 
 
-class Bot(TimeStamp):
+class Bot(models.Model):
     bot_name = models.CharField(max_length=100)
     bot_token = models.CharField(max_length=100, unique=True)
     bot_link = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.bot_name
@@ -49,6 +43,8 @@ class Bot(TimeStamp):
 
 class Channel_type(models.Model):
     type = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.type
@@ -62,12 +58,13 @@ class Channel_post_setting(models.Model):
     photo_caption = models.BooleanField(default=False)
     caption = models.BooleanField(default=False)
     text = models.BooleanField(default=False)
-
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     # class Meta:
     #     app_label = 'setting_ads'
 
 
-class Channels(TimeStamp):
+class Channels(models.Model):
     channel_name = models.CharField(max_length=250)
     channel_link = models.CharField(max_length=250)
     channel_id = models.CharField(max_length=100, unique=True)
@@ -75,6 +72,8 @@ class Channels(TimeStamp):
     bot = models.ForeignKey(Bot, on_delete=models.PROTECT, null=True, blank=True)
     type = models.ForeignKey(Channel_type, on_delete=models.PROTECT)
     setting = models.OneToOneField(Channel_post_setting, on_delete=models.CASCADE, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.channel_name
@@ -111,9 +110,11 @@ class Channels(TimeStamp):
             raise ValidationError('This channel_id already exists')
 
 
-class KeywordChannelAds(TimeStamp):
+class KeywordChannelAds(models.Model):
     text = models.TextField()
     channel = models.ForeignKey(Channels, on_delete=models.SET_NULL, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.text
