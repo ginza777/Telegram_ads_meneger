@@ -1,4 +1,5 @@
 import os
+import shutil
 from datetime import timedelta
 
 from celery import shared_task, Celery
@@ -95,7 +96,7 @@ def delete_message():
     for message_id in messages.values_list('message_id', flat=True):
         folder_name = f"media/{message_id}"
         if os.path.exists(folder_name):
-            os.rmdir(folder_name)
+            shutil.rmtree(folder_name)
             txt += f"EXISTS    = {message_id}\n"
         else:
             txt_not += f"NOTEXISTS = {message_id}\n"

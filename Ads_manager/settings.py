@@ -164,7 +164,6 @@ CELERY_BEAT_SCHEDULE = {
     },
     'delete_message_task': {
         'task': 'sender.tasks.delete_message',
-        #evey 1 day
         'schedule': crontab(minute=0, hour=0),
     },
 
