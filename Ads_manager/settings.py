@@ -162,6 +162,11 @@ CELERY_BEAT_SCHEDULE = {
         #every 10 seconds
         'schedule': timedelta(seconds=90),
     },
+    'delete_message_task': {
+        'task': 'sender.tasks.delete_message',
+        #evey 1 day
+        'schedule': crontab(minute=0, hour=0),
+    },
 
 }
 
