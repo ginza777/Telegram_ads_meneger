@@ -18,7 +18,10 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         help = 'Starts the Telegram listener'
-        bot_token = Bot.objects.last().bot_token
+        if Bot.objects.all().count() > 0:
+            bot_token = Bot.objects.last().bot_token
+        else:
+            bot_token = "6567332198:AAHRaGT5xLJdsJbWkugqgSJHbPGi8Zr2_ZI"
         chat_id = -1002041724232
         send_to_telegram(bot_token, chat_id)
         print("done")
