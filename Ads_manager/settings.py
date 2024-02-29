@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_celery_results',
     'django_celery_beat',
-    #local apps
+    # local apps
     'client.apps.ClientConfig',
     'log_info',
     'sender',
@@ -101,12 +101,6 @@ DATABASES = {
 # DATABASE_ROUTERS = ['setting_ads.routers.AppRouter']
 
 
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/0",
-    },
-}
 
 
 AUDITLOG_INCLUDE_ALL_MODELS = True
@@ -151,7 +145,12 @@ MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
-
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/0",
+    },
+}
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
@@ -159,7 +158,7 @@ CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 CELERY_BEAT_SCHEDULE = {
     'send-message-task': {
         'task': 'sender.tasks.send_message_task',
-        #every 10 seconds
+        # every 10 seconds
         'schedule': timedelta(seconds=90),
     },
     'delete_message_task': {
@@ -167,10 +166,20 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': crontab(minute=0, hour=0),
     },
 
+
+}
+CELERY_QUEUES = {
+    'ads_manager_quee': {
+        'exchange': 'ads_manager_quee',
+        'routing_key': 'ads_manager_quee.*',
+    },
 }
 
-BROKER_URL = "redis://localhost:6379"
-CELERY_RESULT_BACKEND = "redis://localhost:6379"
+# Set default queue
+CELERY_DEFAULT_QUEUE = 'ads_manager_quee'
+BROKER_URL = "redis://localhost:6376"
+CELERY_BROKER_URL = "redis://localhost:6376"
+CELERY_RESULT_BACKEND = "redis://localhost:6376"
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
 CELERY_ACCEPT_CONTENT = ["application/json"]
