@@ -5,7 +5,7 @@ After=network.target
 [Service]
 Type=simple
 WorkingDirectory=/var/projects/ads_manager/Telegram_ads_meneger
-ExecStart=/bin/bash -c '/var/projects/ads_manager/env/bin/celery -A Ads_manager worker   -Q ads_manager_quee  --loglevel=info '
+ExecStart=/bin/bash -c '/var/projects/ads_manager/env/bin/celery -A Ads_manager worker   -Q ads_manager_queue  --loglevel=info '
 Restart=always
 User=root
 

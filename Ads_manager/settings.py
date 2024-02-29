@@ -169,14 +169,14 @@ CELERY_BEAT_SCHEDULE = {
 
 }
 CELERY_QUEUES = {
-    'ads_manager_quee': {
-        'exchange': 'ads_manager_quee',
-        'routing_key': 'ads_manager_quee.*',
+    'ads_manager_queue': {
+        'exchange': 'ads_manager_queue',
+        'routing_key': 'ads_manager_queue.*',
     },
 }
 
 # Set default queue
-CELERY_DEFAULT_QUEUE = 'ads_manager_quee'
+CELERY_DEFAULT_QUEUE = 'ads_manager_queue'
 BROKER_URL = "redis://localhost:6379"
 CELERY_BROKER_URL = "redis://localhost:6379"
 CELERY_RESULT_BACKEND = "redis://localhost:6379"
