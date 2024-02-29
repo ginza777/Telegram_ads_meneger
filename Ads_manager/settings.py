@@ -177,9 +177,9 @@ CELERY_QUEUES = {
 
 # Set default queue
 CELERY_DEFAULT_QUEUE = 'ads_manager_quee'
-BROKER_URL = "redis://localhost:6376"
-CELERY_BROKER_URL = "redis://localhost:6376"
-CELERY_RESULT_BACKEND = "redis://localhost:6376"
+BROKER_URL = "redis://localhost:6379"
+CELERY_BROKER_URL = "redis://localhost:6379"
+CELERY_RESULT_BACKEND = "redis://localhost:6379"
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
 CELERY_ACCEPT_CONTENT = ["application/json"]
